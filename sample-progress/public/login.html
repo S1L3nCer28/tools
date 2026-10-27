@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>样品进度看板 · 登录</title>
+  <style>
+    :root{font-family:"Microsoft YaHei",Arial,sans-serif;color:#24445b;background:#f3f9fd;font-synthesis:none}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 85% 8%,#dff2ff 0,transparent 36%),linear-gradient(135deg,#f7fbff,#edf7fc)}.card{width:min(420px,100%);padding:36px;background:#fff;border:1px solid #deebf4;border-radius:22px;box-shadow:0 24px 70px #315d7a16}.mark{width:46px;height:46px;display:grid;place-items:center;border-radius:14px;background:#e6f4fc;color:#4289b2;font-size:22px}.eyebrow{margin-top:25px;color:#7fa4ba;font-size:10px;letter-spacing:.18em;font-weight:700}h1{margin:8px 0 7px;font-size:25px;color:#29485e}.sub{color:#8196a5;font-size:13px;line-height:1.6}.field{display:flex;flex-direction:column;gap:8px;margin-top:20px;color:#627b8e;font-size:12px;font-weight:700}.field input{height:46px;padding:0 13px;border:1px solid #dce9f2;border-radius:10px;background:#fbfdff;color:#29485e;font:14px inherit;outline:none}.field input:focus{border-color:#73b7dc;box-shadow:0 0 0 3px #8dcdec2c}.submit{width:100%;height:46px;margin-top:24px;border:0;border-radius:10px;background:#69b5dc;color:#fff;font-size:14px;font-weight:750;cursor:pointer;transition:transform .15s,filter .15s}.submit:hover{filter:brightness(.97);transform:translateY(-1px)}.submit:disabled{opacity:.65;cursor:wait;transform:none}.error{min-height:20px;margin-top:12px;color:#cc654f;font-size:12px}.foot{margin-top:17px;color:#a0afba;font-size:11px;text-align:center}.lock{color:#ee7656;margin-right:5px}@media(max-width:460px){.card{padding:28px 23px}}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="mark" aria-hidden="true">◷</div>
+    <div class="eyebrow">SAMPLE WORKSPACE</div>
+    <h1>样品进度看板</h1>
+    <div class="sub">登录后查看并更新你的样品进度。</div>
+    <form id="loginForm">
+      <label class="field">账号<input name="username" autocomplete="username" required autofocus placeholder="请输入账号"></label>
+      <label class="field">密码<input name="password" type="password" autocomplete="current-password" required placeholder="请输入密码"></label>
+      <button class="submit" id="submit" type="submit">登录看板</button>
+      <div class="error" id="error" role="alert" aria-live="polite"></div>
+    </form>
+    <div class="foot"><span class="lock">●</span>公司内部样品管理空间</div>
+  </main>
+  <script>
+    const form=document.getElementById('loginForm'),button=document.getElementById('submit'),error=document.getElementById('error');
+    form.addEventListener('submit',async e=>{e.preventDefault();error.textContent='';button.disabled=true;button.textContent='正在验证…';const body=Object.fromEntries(new FormData(form));try{const res=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(body)});if(!res.ok)throw new Error(res.status===429?'尝试次数过多，请稍后再试。':'账号或密码不正确。');location.assign('/dashboard')}catch(err){error.textContent=err.message||'连接失败，请稍后重试。';button.disabled=false;button.textContent='登录看板'}});
+  </script>
+</body>
+</html>
+
